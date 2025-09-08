@@ -12,38 +12,58 @@
         for <span th:text="${role}"></span>
       </p>
 
+      <!-- Error Message -->
       <div th:if="${error}" class="text-red-600 mb-4" th:text="${error}"></div>
 
-      <div th:if="${insights != null}">
-        <div th:if="${insights.jobTitles != null}">
+      <!-- Job Insights Section -->
+      <div th:if="${jobInsights != null}">
+        <div th:if="${jobInsights.jobTitles != null}">
           <h2 class="text-lg font-semibold text-blue-600">Job Titles</h2>
           <ul class="list-disc list-inside">
-            <li th:each="t : ${insights.jobTitles}" th:text="${t}"></li>
+            <li th:each="t : ${jobInsights.jobTitles}" th:text="${t}"></li>
           </ul>
         </div>
 
-        <div th:if="${insights.skills != null}" class="mt-4">
+        <div th:if="${jobInsights.skills != null}" class="mt-4">
           <h2 class="text-lg font-semibold text-green-600">Skills</h2>
           <ul class="list-disc list-inside">
-            <li th:each="s : ${insights.skills}" th:text="${s}"></li>
+            <li th:each="s : ${jobInsights.skills}" th:text="${s}"></li>
           </ul>
         </div>
 
-        <div th:if="${insights.certifications != null}" class="mt-4">
+        <div th:if="${jobInsights.certifications != null}" class="mt-4">
           <h2 class="text-lg font-semibold text-purple-600">Certifications</h2>
           <ul class="list-disc list-inside">
-            <li th:each="c : ${insights.certifications}" th:text="${c}"></li>
+            <li th:each="c : ${jobInsights.certifications}" th:text="${c}"></li>
           </ul>
         </div>
 
-        <div th:if="${insights.education != null}" class="mt-4">
+        <div th:if="${jobInsights.education != null}" class="mt-4">
           <h2 class="text-lg font-semibold text-red-600">Education</h2>
           <ul class="list-disc list-inside">
-            <li th:each="e : ${insights.education}" th:text="${e}"></li>
+            <li th:each="e : ${jobInsights.education}" th:text="${e}"></li>
           </ul>
         </div>
       </div>
 
+      <!-- Job Match Score Section -->
+      <div class="mt-6 bg-gray-50 p-4 rounded-xl shadow">
+        <h2 class="text-lg font-semibold text-gray-700 mb-2">
+          Job Match Score
+        </h2>
+        <p class="text-gray-600">
+          <span th:if="${jobScorePercentage != null}">
+            Match Score:
+            <span class="font-bold text-green-600" th:text="${jobScore}"></span>
+            (<span th:text="${jobScorePercentage}"></span>%)
+          </span>
+          <span th:if="${jobScorePercentage == null}" class="text-red-500">
+            <span th:text="${jobScore}"></span>
+          </span>
+        </p>
+      </div>
+
+      <!-- Back Button -->
       <div class="mt-6 text-center">
         <a href="/" class="bg-blue-500 text-white px-6 py-2 rounded-lg"
           >Go back</a

@@ -9,7 +9,7 @@
     <div class="grid md:grid-cols-2 gap-6 w-full max-w-5xl">
       <div class="bg-white shadow-lg rounded-xl p-8">
         <h1 class="text-2xl font-bold mb-4">Get Job Insights</h1>
-        <form th:action="@{/jobs/insights}" method="post" class="space-y-4">
+        <form th:action="@{/insights}" method="post" class="space-y-4">
           <input
             name="role"
             placeholder="e.g., Software Engineer"
@@ -28,14 +28,14 @@
       <div class="bg-white shadow-lg rounded-xl p-8">
         <h1 class="text-2xl font-bold mb-4">Upload Resume (PDF)</h1>
         <form
-          th:action="@{/jobs/uploadResume}"
+          th:action="@{/upload}"
           method="post"
           enctype="multipart/form-data"
           class="space-y-4"
         >
           <input
             type="file"
-            name="resume"
+            name="file"
             accept="application/pdf"
             required
             class="w-full"

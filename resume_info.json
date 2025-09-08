@@ -1,0 +1,11 @@
+{
+  "full_name" : "Abubakar Khan",
+  "current_role" : "ML Engineer",
+  "skills" : [ "Computer Vision", "Machine Learning", "Computer Programming", "Python", "Deep Learning", "Project Management", "Interpersonal Skills", "Artificial Neural Networks", "Convolutional Neural Networks", "Image Processing" ],
+  "education" : {
+    "degree" : "Bachelors in computer science",
+    "university" : "SEECS, Islamabad",
+    "dates" : "September 2022 — June 2026"
+  },
+  "certifications" : [ ]
+}
