@@ -124,8 +124,4 @@ public class OpenAIService {
         }
         return t.trim();
     }
-
-    // Jackson nodes used above
-    // import com.fasterxml.jackson.databind.node.ObjectNode;
-    // import com.fasterxml.jackson.databind.node.ArrayNode;
 }

@@ -13,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import jakarta.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -26,41 +27,41 @@ public class JobController {
     @Autowired
     private ObjectMapper objectMapper;
 
-    // Keep last uploaded resume skills in memory for score matching
-    private List<String> lastUploadedResumeSkills;
-
-    // ------------------- Resume Upload -------------------
     @PostMapping("/upload")
-    public String uploadResume(@RequestParam("file") MultipartFile file, Model model) {
+    public String uploadResume(@RequestParam("file") MultipartFile file, HttpSession session, Model model) {
         if (file.isEmpty()) {
             model.addAttribute("error", "Please upload a resume file.");
             return "resume-result";
         }
 
         try {
-            // ✅ Step 1: Extract text from PDF
+            // Extract text from PDF
             String resumeText;
             try (PDDocument document = PDDocument.load(file.getInputStream())) {
                 PDFTextStripper stripper = new PDFTextStripper();
                 resumeText = stripper.getText(document);
             }
 
-            // ✅ Step 2: Call OpenAI service with extracted text
+            // Call OpenAI service with extracted text
             JsonNode jsonNode = openAIService.extractResumeInfo(resumeText);
 
-            // ✅ Step 3: Map JSON to ResumeInfo object
+            // Map JSON to ResumeInfo object
             ResumeInfo resumeInfo = objectMapper.treeToValue(jsonNode, ResumeInfo.class);
 
-            // ✅ Step 4: Save last uploaded resume skills for scoring
+            // Save in session
             if (resumeInfo.getSkills() != null) {
-                lastUploadedResumeSkills = resumeInfo.getSkills();
+                session.setAttribute("lastUploadedResumeSkills", resumeInfo.getSkills());
             }
+            session.setAttribute("resumeInfo", resumeInfo);
+            session.setAttribute("uploadedFileName", file.getOriginalFilename());
 
-            // (Optional) Save JSON for debugging
+            // Save JSON for debugging
             String outputPath = System.getProperty("user.dir") + File.separator + "resume_info.json";
             objectMapper.writerWithDefaultPrettyPrinter().writeValue(new File(outputPath), jsonNode);
 
+            // Add attributes for view
             model.addAttribute("resumeInfo", resumeInfo);
+            model.addAttribute("uploadedFileName", file.getOriginalFilename());
 
         } catch (IOException e) {
             model.addAttribute("error", "Failed to process resume: " + e.getMessage());
@@ -68,25 +69,27 @@ public class JobController {
             model.addAttribute("error", "Unexpected error: " + e.getMessage());
         }
 
+        // Go to resume-result page instead of index
         return "resume-result";
     }
 
-    // ------------------- Job Insights -------------------
+
     @PostMapping("/insights")
-    public String getJobInsights(@RequestParam String role, Model model) {
+    public String getJobInsights(@RequestParam String role, HttpSession session, Model model) {
         try {
             JsonNode jsonNode = openAIService.getJobInsights(role);
 
-            // ✅ Map JSON to JobInsights object
+            // Map JSON to JobInsights object
             JobInsights jobInsights = objectMapper.treeToValue(jsonNode, JobInsights.class);
 
-            // (Optional) Save JSON for debugging
+            // Save JSON for debugging
             String outputPath = System.getProperty("user.dir") + File.separator + "job_insights.json";
             objectMapper.writerWithDefaultPrettyPrinter().writeValue(new File(outputPath), jsonNode);
 
             model.addAttribute("jobInsights", jobInsights);
 
-            // ✅ Job Score Matching
+            // Job Score Matching
+            List<String> lastUploadedResumeSkills = (List<String>) session.getAttribute("lastUploadedResumeSkills");
             if (lastUploadedResumeSkills != null && !lastUploadedResumeSkills.isEmpty()) {
                 int matchCount = 0;
                 for (String skill : jobInsights.getSkills()) {
@@ -106,6 +109,10 @@ public class JobController {
                 model.addAttribute("jobScorePercentage", null);
             }
 
+            // Add resume info + filename back to model
+            model.addAttribute("resumeInfo", session.getAttribute("resumeInfo"));
+            model.addAttribute("uploadedFileName", session.getAttribute("uploadedFileName"));
+
         } catch (IOException e) {
             model.addAttribute("error", "Failed to fetch job insights: " + e.getMessage());
         } catch (Exception e) {
@@ -114,4 +121,16 @@ public class JobController {
 
         return "result";
     }
+
+    @GetMapping("/")
+    public String index(HttpSession session, Model model) {
+        // Load from session if available
+        Object resumeInfo = session.getAttribute("resumeInfo");
+        Object uploadedFileName = session.getAttribute("uploadedFileName");
+
+        model.addAttribute("resumeInfo", resumeInfo);
+        model.addAttribute("uploadedFileName", uploadedFileName);
+
+        return "index";
+}
 }

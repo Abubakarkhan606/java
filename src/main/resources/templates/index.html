@@ -7,6 +7,7 @@
   </head>
   <body class="bg-gray-100 min-h-screen flex items-center justify-center p-6">
     <div class="grid md:grid-cols-2 gap-6 w-full max-w-5xl">
+      <!-- Job Insights Section -->
       <div class="bg-white shadow-lg rounded-xl p-8">
         <h1 class="text-2xl font-bold mb-4">Get Job Insights</h1>
         <form th:action="@{/insights}" method="post" class="space-y-4">
@@ -25,6 +26,7 @@
         </form>
       </div>
 
+      <!-- Resume Upload Section -->
       <div class="bg-white shadow-lg rounded-xl p-8">
         <h1 class="text-2xl font-bold mb-4">Upload Resume (PDF)</h1>
         <form
@@ -37,15 +39,20 @@
             type="file"
             name="file"
             accept="application/pdf"
-            required
             class="w-full"
           />
+
+          <!-- Always show last uploaded file name if available -->
+          <p th:if="${uploadedFileName != null}" class="text-sm text-gray-600">
+            Last uploaded file:
+            <span class="font-medium" th:text="${uploadedFileName}"></span>
+          </p>
+
           <button
             type="submit"
             class="bg-green-600 text-white px-6 py-2 rounded-lg"
-          >
-            Extract
-          </button>
+            th:text="${resumeInfo == null} ? 'Extract' : 'Replace Resume'"
+          ></button>
         </form>
       </div>
     </div>
