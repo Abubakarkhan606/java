@@ -1,6 +1,6 @@
 {
-  "job_titles" : [ "Machine Learning Engineer", "ML Engineer", "AI Engineer" ],
-  "certifications" : [ "Machine Learning Engineer Certification", "Deep Learning Specialization", "TensorFlow Developer Certificate" ],
-  "skills" : [ "Python", "Machine Learning", "Deep Learning", "Neural Networks", "Natural Language Processing" ],
-  "education" : [ "Bachelor's degree in Computer Science or related field", "Master's degree in Computer Science or Data Science is preferred" ]
+  "job_titles" : [ "Software Engineer", "Software Developer", "Programmer" ],
+  "certifications" : [ "AWS Certified Developer", "Microsoft Certified: Azure Developer Associate", "Google Professional Cloud Developer" ],
+  "skills" : [ "Programming languages (e.g., Java, Python, C++)", "Web development (e.g., HTML, CSS, JavaScript)", "Database management", "Problem-solving", "Algorithm design" ],
+  "education" : [ "Bachelor's degree in Computer Science or related field", "Master's degree in Computer Science (optional)" ]
 }

@@ -47,20 +47,57 @@
       </div>
 
       <!-- Job Match Score Section -->
-      <div class="mt-6 bg-gray-50 p-4 rounded-xl shadow">
-        <h2 class="text-lg font-semibold text-gray-700 mb-2">
+      <div class="mt-6 bg-gray-50 p-4 rounded-xl shadow text-center">
+        <h2 class="text-lg font-semibold text-gray-700 mb-4">
           Job Match Score
         </h2>
-        <p class="text-gray-600">
-          <span th:if="${jobScorePercentage != null}">
-            Match Score:
+
+        <!-- Circular Progress Bar -->
+        <div
+          th:if="${jobScorePercentage != null}"
+          class="flex flex-col items-center"
+        >
+          <div class="relative w-32 h-32">
+            <svg class="w-32 h-32 transform -rotate-90">
+              <circle
+                cx="64"
+                cy="64"
+                r="54"
+                stroke="currentColor"
+                class="text-gray-200"
+                stroke-width="12"
+                fill="transparent"
+              ></circle>
+              <circle
+                cx="64"
+                cy="64"
+                r="54"
+                stroke="currentColor"
+                class="text-green-500"
+                stroke-width="12"
+                fill="transparent"
+                stroke-linecap="round"
+                stroke-dasharray="339.292"
+                th:attr="stroke-dashoffset=${339.292 - (jobScorePercentage * 339.292 / 100)}"
+              ></circle>
+            </svg>
+            <div class="absolute inset-0 flex items-center justify-center">
+              <span
+                class="text-xl font-bold text-gray-700"
+                th:text="${#numbers.formatDecimal(jobScorePercentage, 0, 0)} + '%'"
+              ></span>
+            </div>
+          </div>
+          <p class="mt-2 text-gray-600">
             <span class="font-bold text-green-600" th:text="${jobScore}"></span>
-            (<span th:text="${jobScorePercentage}"></span>%)
-          </span>
-          <span th:if="${jobScorePercentage == null}" class="text-red-500">
-            <span th:text="${jobScore}"></span>
-          </span>
-        </p>
+            matched
+          </p>
+        </div>
+
+        <!-- Fallback if no resume uploaded -->
+        <div th:if="${jobScorePercentage == null}" class="text-red-500">
+          <span th:text="${jobScore}"></span>
+        </div>
       </div>
 
       <!-- Back Button -->

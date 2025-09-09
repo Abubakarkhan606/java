@@ -103,7 +103,7 @@ public class JobController {
                 double percentage = totalSkills > 0 ? ((double) matchCount / totalSkills) * 100 : 0;
 
                 model.addAttribute("jobScore", matchCount + "/" + totalSkills);
-                model.addAttribute("jobScorePercentage", String.format("%.2f", percentage));
+                model.addAttribute("jobScorePercentage", percentage);  // ✅ keep as double
             } else {
                 model.addAttribute("jobScore", "No resume uploaded");
                 model.addAttribute("jobScorePercentage", null);
